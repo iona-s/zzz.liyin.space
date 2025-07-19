@@ -103,8 +103,8 @@ const endSeriesDrag = () => {
         <div class="achievement-series" id="achievement-series" @wheel="handleScroll" >
             <!-- @mousedown="startSeriesDrag" @mousemove="handleSeriesDrag" @mouseup="endSeriesDrag" @mouseleave="endSeriesDrag" -->
              <template v-for="(secondClass, index) in achievementStore.showAchievementSecondClasseses" :key="secondClass.Id">
-                <div v-if="!hiddenCompleteAchievementSeries || (secondClass.completedAchievementsLength !== secondClass.AchievementsLength || index === 0)" class="series-navigation"  :class="{'series-fold': hadFold}">
-                    <RouterLink v-if="secondClass.AchievementsLength + secondClass.notAvailableAchievementsLengeh !== 0"
+                <div v-if="!hiddenCompleteAchievementSeries || (secondClass.completedAchievementsLength !== secondClass.AchievementsLength + secondClass.notAvailableAchievementsLength || index === 0)" class="series-navigation"  :class="{'series-fold': hadFold}">
+                    <RouterLink v-if="secondClass.AchievementsLength + secondClass.notAvailableAchievementsLength !== 0"
                     :to="`/achievement/${showFirstClassId}/${secondClass.Id}`" :class="{'selected': showSecondClassId === secondClass.Id}" v-preventDragStart="true">
                         <el-popover placement="bottom" :offset="-5" width="fit-content" popper-style="min-width: 60px;" trigger="hover" :enterable="false">
                             <template #reference>
@@ -114,7 +114,7 @@ const endSeriesDrag = () => {
                                     </div>
                                     <div class="series-count">
                                         {{secondClass.completedAchievementsLength}} / {{secondClass.AchievementsLength}}
-                                        <span v-if="secondClass.notAvailableAchievementsLengeh" class="series-count-not-available">+{{ secondClass.notAvailableAchievementsLengeh }}</span>
+                                        <span v-if="secondClass.notAvailableAchievementsLength" class="series-count-not-available">+{{ secondClass.notAvailableAchievementsLength }}</span>
                                         ({{secondClass.completedPercentage}})
                                     </div>
                                     <div class="series-Polychrome" v-if="!hadFold">

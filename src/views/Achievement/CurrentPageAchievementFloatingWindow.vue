@@ -29,7 +29,7 @@ const { isDark } = storeToRefs(themeStore)
         </div>
         <div class="series-count">
           {{showAchievementSecondClass.completedAchievementsLength}} / {{showAchievementSecondClass.AchievementsLength}}
-          <span v-if="showAchievementSecondClass.notAvailableAchievementsLengeh" class="series-count-not-available">+{{ showAchievementSecondClass.notAvailableAchievementsLengeh }}</span>
+          <span v-if="showAchievementSecondClass.notAvailableAchievementsLength" class="series-count-not-available">+{{ showAchievementSecondClass.notAvailableAchievementsLength }}</span>
           ({{showAchievementSecondClass.completedPercentage}})
         </div>
         <div class="series-Polychrome">
