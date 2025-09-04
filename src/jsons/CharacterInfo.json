@@ -568,5 +568,35 @@
     "warp": "limited",
     "version": 2.1,
     "faction": ["怪啖屋"]
+  },
+  "1039": {
+    "id": 1039,
+    "MiYoSheId": 1499,
+    "HoYoWikiId": 901,
+    "name": "「席德」",
+    "shortName": "「席德」",
+    "avatar": "/2025/07/27/1010908/47a51ea9f05bd537d1b753de532c38aa_3041307973334713412.png",
+    "specialty": "强攻",
+    "stats": "电",
+    "attackType": "斩击",
+    "rank": "S",
+    "warp": "limited",
+    "version": 2.2,
+    "faction": ["防卫军·奥波勒斯小队"]
+  },
+  "1040": {
+    "id": 1040,
+    "MiYoSheId": 1501   ,
+    "HoYoWikiId": 902,
+    "name": "奥菲丝·马格努森",
+    "shortName": "奥菲丝",
+    "avatar": "/2025/07/29/1010908/7473503f9af622d85b799c76838b9c4b_6153559647515955139.png",
+    "specialty": "强攻",
+    "stats": "火",
+    "attackType": "斩击",
+    "rank": "S",
+    "warp": "limited",
+    "version": 2.2,
+    "faction": ["防卫军·奥波勒斯小队"]
   }
 }
