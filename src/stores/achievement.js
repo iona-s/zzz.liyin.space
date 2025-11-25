@@ -5,6 +5,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { useTextjoinStore } from '@/stores/textjoin.js'
 import { useSettingStore } from '@/stores/achievementSetting'
 import { useAchievementCustomNotAchievedStore } from '@/stores/achievementCustomNotAchieved'
+import syncService from '@/services/syncService'
 import { achievementInfoVersion, achievementFirstClassVersion, achievementSecondClassVersion, multipleChoiceVersion,
      notAvailableAchievementVersion, achievementStrategyVersion, strategyInfoVersion } 
      from '@/utils/version.js'
@@ -379,10 +380,35 @@ export const useAchievementStore = defineStore('achievement', () => {
             userAchievement = {}
         }
     }
+    //重新加载用户成就数据（用于同步后）
+    const reloadUserAchievement = () => {
+        getUserAchievement()
+        if (achievements.value.length > 0) {
+            initialAchievementsStatus()
+            initialNotAvailable()
+            initialAchievementsCustomNotAchievedStatus()
+        }
+    }
     //保存缓存
-    const saveUserAchievement = () => {
+    const saveUserAchievement = async () => {
         // 将对象转换为字符串，并将其存储在缓存中
         localStorage.setItem(USER_ACHIEVEMENT_KEY, JSON.stringify(userAchievement))
+
+        // Trigger sync after save
+        try {
+            const isAvailable = await syncService.checkServerStatus()
+            if (isAvailable) {
+                const userInfo = userInfoStore.userInfoList
+                await syncService.pushToServer(
+                    userInfo,
+                    userAchievement,
+                    JSON.parse(localStorage.getItem('zzz-userTextjoin') || '{}'),
+                    JSON.parse(localStorage.getItem('zzz-userCustomNotAchieved') || '{}')
+                )
+            }
+        } catch (error) {
+            console.warn('Sync failed:', error)
+        }
     }
     const findUserAchievementList = () => {
         // 查找用户成就列表
@@ -1134,6 +1160,7 @@ export const useAchievementStore = defineStore('achievement', () => {
         handleSelectAll,
         findUserAchievementList,
         handleUserAchievementList,
+        reloadUserAchievement,
         getAchievementFilterConfig,
         AchievementToCustomNotAchieved,
         AchievementCancelCustomNotAchieved,

@@ -1,10 +1,57 @@
 import {ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import syncService from '@/services/syncService'
 
 export const useUserInfoStore = defineStore('userInfo', () => {
     const userInfoList = ref({})
 
     const USERINFO_KEY = 'zzz-userInfo'
+
+    // Helper to trigger sync after changes
+    const triggerSync = async () => {
+        try {
+            // Only attempt sync if server is available
+            const isAvailable = await syncService.checkServerStatus()
+            if (isAvailable) {
+                // Push current state to server
+                const localData = {
+                    userInfo: userInfoList.value,
+                    achievements: {},
+                    textjoins: {},
+                    customNotAchieved: {}
+                }
+
+                const userAchievementKey = 'zzz-userAchievement'
+                const userTextjoinKey = 'zzz-userTextjoin'
+                const userCustomNotAchievedKey = 'zzz-userCustomNotAchieved'
+
+                const tempAchievement = localStorage.getItem(userAchievementKey)
+                if (tempAchievement) {
+                    localData.achievements = JSON.parse(tempAchievement)
+                }
+
+                const tempTextjoin = localStorage.getItem(userTextjoinKey)
+                if (tempTextjoin) {
+                    localData.textjoins = JSON.parse(tempTextjoin)
+                }
+
+                const tempCustomNotAchieved = localStorage.getItem(userCustomNotAchievedKey)
+                if (tempCustomNotAchieved) {
+                    localData.customNotAchieved = JSON.parse(tempCustomNotAchieved)
+                }
+
+                await syncService.pushToServer(
+                    localData.userInfo,
+                    localData.achievements,
+                    localData.textjoins,
+                    localData.customNotAchieved
+                )
+            }
+        } catch (error) {
+            // Silently fail - sync is not critical for operation
+            console.warn('Sync failed:', error)
+        }
+    }
 
     const getUserInfo = () => {
         // 从缓存中读取名为 USERINFO_KEY 的数据
@@ -79,6 +126,8 @@ export const useUserInfoStore = defineStore('userInfo', () => {
     const saveUserInfo = () => {
         // 将对象转换为字符串，并将其存储在缓存中
         localStorage.setItem(USERINFO_KEY, JSON.stringify(userInfoList.value))
+        // Trigger sync after save
+        triggerSync()
     }
 
     const currentUserInfo = computed(() => {

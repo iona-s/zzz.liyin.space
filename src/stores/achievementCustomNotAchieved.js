@@ -1,6 +1,7 @@
 import {ref, watchEffect, computed } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import { useUserInfoStore } from '@/stores/userInfo'
+import syncService from '@/services/syncService'
 
 export const useAchievementCustomNotAchievedStore = defineStore('achievementCustomNotAchieved', () => { 
     const userInfoStore = useUserInfoStore()
@@ -26,9 +27,25 @@ export const useAchievementCustomNotAchievedStore = defineStore('achievementCust
         }
     }
     //保存缓存
-    const saveUserCustomNotAchieved = () => {
+    const saveUserCustomNotAchieved = async () => {
         // 将对象转换为字符串，并将其存储在缓存中
         localStorage.setItem(User_Custom_Not_Achieved_KEY, JSON.stringify(userCustomNotAchieved))
+
+        // Trigger sync after save
+        try {
+            const isAvailable = await syncService.checkServerStatus()
+            if (isAvailable) {
+                const userInfo = userInfoStore.userInfoList
+                await syncService.pushToServer(
+                    userInfo,
+                    JSON.parse(localStorage.getItem('zzz-userAchievement') || '{}'),
+                    JSON.parse(localStorage.getItem('zzz-userTextjoin') || '{}'),
+                    userCustomNotAchieved
+                )
+            }
+        } catch (error) {
+            console.warn('Sync failed:', error)
+        }
     }
     const findUserCustomNotAchievedList = () => {
         // 查找自定义暂不可获取列表

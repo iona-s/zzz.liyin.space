@@ -1,9 +1,14 @@
 <script setup>
 import { ArrowDown } from '@element-plus/icons-vue'
 import UpdateLogDialog from '@/views/UpdateLog/index.vue'
+import AuthTokenDialog from '@/components/AuthTokenDialog.vue'
 import { useUserInfoStore } from '@/stores/userInfo'
 import { useAuthorStore } from '@/stores/author'
 import { useCharacterStore } from '@/stores/character'
+import { useAchievementStore } from '@/stores/achievement'
+import { useTextjoinStore } from '@/stores/textjoin'
+import { useAchievementCustomNotAchievedStore } from '@/stores/achievementCustomNotAchieved'
+import { useSyncStore } from '@/stores/sync'
 import { useIsMobileStore } from '@/stores/isMobile'
 import { useThemeStore } from '@/stores/theme'
 import { onMounted } from 'vue'
@@ -21,6 +26,11 @@ const { initialAuthorsInfo } = authorStore
 
 const characterStore = useCharacterStore()
 const { initialCharactersInfo, getCharacterAvatar, getCharacterAvatarName } = characterStore
+
+const achievementStore = useAchievementStore()
+const textjoinStore = useTextjoinStore()
+const customNotAchievedStore = useAchievementCustomNotAchievedStore()
+const syncStore = useSyncStore()
 
 const isMobileStore = useIsMobileStore()
 const { isMobile } = storeToRefs(isMobileStore)
@@ -43,10 +53,29 @@ const navList = [
     }
 ]
 
-onMounted(() => {
+onMounted(async () => {
     getUserInfo()
     initialAuthorsInfo()
     initialCharactersInfo()
+
+    // Perform initial sync on page load
+    const stores = {
+        userInfo: userInfoStore,
+        achievement: achievementStore,
+        textjoin: textjoinStore,
+        customNotAchieved: customNotAchievedStore
+    }
+
+    try {
+        await syncStore.checkServerStatus()
+        const { serverAvailable } = storeToRefs(syncStore)
+        if (serverAvailable.value) {
+            await syncStore.syncData(stores)
+            console.log('Initial sync completed on page load')
+        }
+    } catch (error) {
+        console.warn('Initial sync failed:', error)
+    }
 })
 
 </script>
@@ -118,6 +147,7 @@ onMounted(() => {
         <RouterView />
     </main>
     
+    <AuthTokenDialog />
     <UpdateLogDialog />
 </template>
 

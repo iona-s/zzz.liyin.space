@@ -2,6 +2,8 @@
 import UpdateLog from '@/views/Setting/UpdateLog.vue'
 import AccountManage from '@/views/Setting/AccountManage.vue'
 import ThemeSetting from '@/views/Setting/ThemeSetting.vue'
+import SyncSetting from '@/views/Setting/SyncSetting.vue'
+import TokenSetting from '@/views/Setting/TokenSetting.vue'
 </script>
 
 <template>
@@ -9,6 +11,10 @@ import ThemeSetting from '@/views/Setting/ThemeSetting.vue'
         <UpdateLog />
 
         <ThemeSetting />
+
+        <TokenSetting />
+
+        <SyncSetting />
 
         <AccountManage />
 

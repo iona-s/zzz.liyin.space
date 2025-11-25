@@ -1,6 +1,7 @@
 import {ref, watchEffect, computed } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import { useUserInfoStore } from '@/stores/userInfo'
+import syncService from '@/services/syncService'
 
 
 export const useTextjoinStore = defineStore('textjoin', () => {
@@ -31,9 +32,26 @@ export const useTextjoinStore = defineStore('textjoin', () => {
         }
     }
     //保存缓存
-    const saveUserTextjoin = () => {
+    const saveUserTextjoin = async () => {
         // 将对象转换为字符串，并将其存储在缓存中
         localStorage.setItem(TEXTJOIN_KEY, JSON.stringify(userTextjoin.value))
+
+        // Trigger sync after save
+        try {
+            const isAvailable = await syncService.checkServerStatus()
+            if (isAvailable) {
+                const userInfoStore = useUserInfoStore()
+                const userInfo = userInfoStore.userInfoList
+                await syncService.pushToServer(
+                    userInfo,
+                    JSON.parse(localStorage.getItem('zzz-userAchievement') || '{}'),
+                    userTextjoin.value,
+                    JSON.parse(localStorage.getItem('zzz-userCustomNotAchieved') || '{}')
+                )
+            }
+        } catch (error) {
+            console.warn('Sync failed:', error)
+        }
     }
 
     const getUserTextjoinList = (tokenID) => {

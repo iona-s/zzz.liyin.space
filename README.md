@@ -5,20 +5,9 @@
 zzz.liyin.space Zenless zone zero Achievement Web
 zzz.liyin.space 绝区零成就网址
 
-[zzz.liyin.space 网页](https://zzz.liyin.space/)
+原项目见上游\
+该分支为了方便自用增加了后端保存成就数据
 
-## 运行
+详细设置请参考[快速参考](./docs/QUICK_REFERENCE.md)
 
-### 运行环境
-
-```
-node v20.11.1
-Windows 10+
-```
-
-### 运行
-
-```
-npm install
-npm run dev
-```
+## **所有新代码和文档均为Ai生成，只进行了简单测试，不保证稳定性**
