@@ -1,5 +1,6 @@
 import {ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { notifyCloudProgressChanged } from '@/stores/cloudSync'
 
 export const useUserInfoStore = defineStore('userInfo', () => {
     const userInfoList = ref({})
@@ -79,6 +80,7 @@ export const useUserInfoStore = defineStore('userInfo', () => {
     const saveUserInfo = () => {
         // 将对象转换为字符串，并将其存储在缓存中
         localStorage.setItem(USERINFO_KEY, JSON.stringify(userInfoList.value))
+        notifyCloudProgressChanged()
     }
 
     const currentUserInfo = computed(() => {
@@ -215,6 +217,7 @@ export const useUserInfoStore = defineStore('userInfo', () => {
                     }
                 }
                 localStorage.setItem(key, JSON.stringify(storageJson))
+                notifyCloudProgressChanged()
                 console.log(storageJson)
             } 
         }

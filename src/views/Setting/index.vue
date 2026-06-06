@@ -2,6 +2,7 @@
 import UpdateLog from '@/views/Setting/UpdateLog.vue'
 import AccountManage from '@/views/Setting/AccountManage.vue'
 import ThemeSetting from '@/views/Setting/ThemeSetting.vue'
+import CloudSyncSetting from '@/views/Setting/CloudSyncSetting.vue'
 </script>
 
 <template>
@@ -9,6 +10,8 @@ import ThemeSetting from '@/views/Setting/ThemeSetting.vue'
         <UpdateLog />
 
         <ThemeSetting />
+
+        <CloudSyncSetting />
 
         <AccountManage />
 

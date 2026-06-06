@@ -5,6 +5,7 @@ import { useUserInfoStore } from '@/stores/userInfo'
 import { useTextjoinStore } from '@/stores/textjoin.js'
 import { useSettingStore } from '@/stores/achievementSetting'
 import { useAchievementCustomNotAchievedStore } from '@/stores/achievementCustomNotAchieved'
+import { notifyCloudProgressChanged } from '@/stores/cloudSync'
 import { achievementInfoVersion, achievementFirstClassVersion, achievementSecondClassVersion, multipleChoiceVersion,
      notAvailableAchievementVersion, achievementStrategyVersion, strategyInfoVersion } 
      from '@/utils/version.js'
@@ -383,6 +384,7 @@ export const useAchievementStore = defineStore('achievement', () => {
     const saveUserAchievement = () => {
         // 将对象转换为字符串，并将其存储在缓存中
         localStorage.setItem(USER_ACHIEVEMENT_KEY, JSON.stringify(userAchievement))
+        notifyCloudProgressChanged()
     }
     const findUserAchievementList = () => {
         // 查找用户成就列表

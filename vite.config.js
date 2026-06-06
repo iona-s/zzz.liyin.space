@@ -1,4 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
+import { cpSync } from 'node:fs'
+import { resolve } from 'node:path'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -8,9 +10,27 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
+const copyRuntimePublicAssets = () => ({
+  name: 'copy-runtime-public-assets',
+  closeBundle(){
+    const distSrc = resolve('dist', 'src')
+
+    cpSync(resolve('src', 'jsons'), resolve(distSrc, 'jsons'), { recursive: true })
+    cpSync(resolve('src', 'images'), resolve(distSrc, 'images'), { recursive: true })
+  }
+})
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/',
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
+  },
   plugins: [
     vue(),
     AutoImport({
@@ -19,6 +39,7 @@ export default defineConfig({
     Components({
       resolvers: [ElementPlusResolver()],
     }),
+    copyRuntimePublicAssets(),
   ],
   build: {  
     rollupOptions: {

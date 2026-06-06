@@ -6,6 +6,7 @@ import { useAuthorStore } from '@/stores/author'
 import { useCharacterStore } from '@/stores/character'
 import { useIsMobileStore } from '@/stores/isMobile'
 import { useThemeStore } from '@/stores/theme'
+import { useCloudSyncStore } from '@/stores/cloudSync'
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router';
@@ -28,6 +29,8 @@ const { isMobile } = storeToRefs(isMobileStore)
 const themeStore = useThemeStore()
 const { isDark } = storeToRefs(themeStore)
 
+const cloudSyncStore = useCloudSyncStore()
+
 const navList = [
     {
         name: '成就',
@@ -45,6 +48,7 @@ const navList = [
 
 onMounted(() => {
     getUserInfo()
+    cloudSyncStore.restoreSession()
     initialAuthorsInfo()
     initialCharactersInfo()
 })

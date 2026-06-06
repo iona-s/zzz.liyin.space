@@ -1,0 +1,10 @@
+{
+  "users": [
+    {
+      "id": "admin",
+      "username": "admin",
+      "displayName": "管理员",
+      "passwordHash": "scrypt:<salt>:<hash>"
+    }
+  ]
+}

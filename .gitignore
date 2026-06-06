@@ -13,6 +13,9 @@ dist
 dist-ssr
 coverage
 *.local
+.env
+server/data/users.json
+server/data/progress.json
 
 /cypress/videos/
 /cypress/screenshots/

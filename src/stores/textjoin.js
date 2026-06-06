@@ -1,6 +1,7 @@
 import {ref, watchEffect, computed } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import { useUserInfoStore } from '@/stores/userInfo'
+import { notifyCloudProgressChanged } from '@/stores/cloudSync'
 
 
 export const useTextjoinStore = defineStore('textjoin', () => {
@@ -34,6 +35,7 @@ export const useTextjoinStore = defineStore('textjoin', () => {
     const saveUserTextjoin = () => {
         // 将对象转换为字符串，并将其存储在缓存中
         localStorage.setItem(TEXTJOIN_KEY, JSON.stringify(userTextjoin.value))
+        notifyCloudProgressChanged()
     }
 
     const getUserTextjoinList = (tokenID) => {

@@ -1,6 +1,7 @@
 import {ref, watchEffect, computed } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 import { useUserInfoStore } from '@/stores/userInfo'
+import { notifyCloudProgressChanged } from '@/stores/cloudSync'
 
 export const useAchievementCustomNotAchievedStore = defineStore('achievementCustomNotAchieved', () => { 
     const userInfoStore = useUserInfoStore()
@@ -29,6 +30,7 @@ export const useAchievementCustomNotAchievedStore = defineStore('achievementCust
     const saveUserCustomNotAchieved = () => {
         // 将对象转换为字符串，并将其存储在缓存中
         localStorage.setItem(User_Custom_Not_Achieved_KEY, JSON.stringify(userCustomNotAchieved))
+        notifyCloudProgressChanged()
     }
     const findUserCustomNotAchievedList = () => {
         // 查找自定义暂不可获取列表
